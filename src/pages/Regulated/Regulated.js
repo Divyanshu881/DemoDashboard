@@ -1,15 +1,15 @@
 import React,{useState} from "react";
 import { styled } from '@mui/material/styles';
-import Form from './Regulated/Form';
+import Form from './Form';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import Usertable from "../components/Usertable";
+import Usertable from "../../components/Usertable";
 
 
 const drawerWidth = 240;
 
-const Platform =(props)=>{
+const Regulated =(props)=>{
 
 
   const style = {
@@ -44,6 +44,7 @@ const Platform =(props)=>{
         }),
       );
 
+
       const DrawerHeader = styled('div')(({ theme }) => ({
         display: 'flex',
         alignItems: 'center',
@@ -52,7 +53,6 @@ const Platform =(props)=>{
         ...theme.mixins.toolbar,
         justifyContent: 'flex-end',
       }));
-
 
       const [isClicked,setIsClicked] = useState(false);
       const [event,setEvent] = useState('');
@@ -66,12 +66,14 @@ const Platform =(props)=>{
       const closeHandler = ()=>{
         setIsClicked(false);
       }
-
+    
     return(<>
-     <Main open={props.open}>
+    <Main open={props.open}>
         <DrawerHeader />
-        <Button onClick={()=>(createHandler('Platform'))}>Register as Platform</Button>
-        <Button onClick={()=>(createHandler('Course'))}> Create a Course</Button>
+        <Button onClick={()=>(createHandler('Board'))}>Create Board</Button>
+        <Button onClick={()=>(createHandler('College'))}>Create College</Button>
+        <Button onClick={()=>(createHandler('Course'))}> Register Course as college</Button>
+        <Button onClick={()=>(createHandler('RegisterCollege'))}> Take admission in college</Button>
         <Button onClick={()=>(createHandler('Student'))}>Enroll to course</Button>
         <Modal
               open={isClicked}
@@ -83,10 +85,14 @@ const Platform =(props)=>{
                 <Form type={event} onClose={closeHandler}/>
               </Box>
             </Modal>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
             <Usertable/>
       </Main>
     </>)
 }
 
 
-export default Platform;
+export default Regulated;

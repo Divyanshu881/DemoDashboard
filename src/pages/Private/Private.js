@@ -1,8 +1,23 @@
-import React from "react";
+import React,{useState} from "react";
 import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Form from './FormPrivate';
 const drawerWidth = 240;
 
-const Regulated =(props)=>{
+const Private =(props)=>{
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+  
 
     const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
         ({ theme, open }) => ({
@@ -23,7 +38,6 @@ const Regulated =(props)=>{
         }),
       );
 
-
       const DrawerHeader = styled('div')(({ theme }) => ({
         display: 'flex',
         alignItems: 'center',
@@ -33,13 +47,38 @@ const Regulated =(props)=>{
         justifyContent: 'flex-end',
       }));
 
-    return(<>
-    <Main open={props.open}>
-        <DrawerHeader />
+
+    const [tokenId,setTokenId] = useState("");
+
+  
+
+      const tokenChangeHandler = (event) => {
+        setTokenId(event.target.value);
+      };
+
+      const submitHandler = (event) => {
+        event.preventDefault();
         
+
+        /// Check button implementation 
+        setTokenId("");
+      
+      };
+
+      const closeHandler = ()=>{
+        setTokenId("");
+      }
+
+
+    return(<>
+     <Main open={props.open}>
+        <DrawerHeader />
+        <Box sx={style}>
+          <Form type="Token" onClose={closeHandler}/>
+        </Box>
       </Main>
     </>)
 }
 
 
-export default Regulated;
+export default Private;

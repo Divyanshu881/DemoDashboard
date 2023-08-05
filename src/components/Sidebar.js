@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React,{useEffect,useState} from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -13,8 +13,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Switch,Route,Redirect } from 'react-router-dom';
-import Regulated from '../pages/Regulated';
-import Private from '../pages/Private';
+import Regulated from '../pages/Regulated/Regulated';
+import Private from '../pages/Private/Private';
 import Platform from '../pages/Platform';
 import {listItems} from './listItems';
 
@@ -60,6 +60,65 @@ export default function PersistentDrawerLeft() {
     setOpen(false);
   };
 
+  const [walletAddress, setWalletAddress] = useState("");
+
+  useEffect(() => {
+    getCurrentWalletConnected();
+    addWalletListener();
+  }, [walletAddress]);
+
+  const connectWallet = async () => {
+    if (typeof window != "undefined" && typeof window.ethereum != "undefined") {
+      try {
+        /* MetaMask is installed */
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        setWalletAddress(accounts[0]);
+        console.log(accounts[0]);
+      } catch (err) {
+        console.error(err.message);
+      }
+    } else {
+      /* MetaMask is not installed */
+      console.log("Please install MetaMask");
+    }
+  };
+
+  const getCurrentWalletConnected = async () => {
+    if (typeof window != "undefined" && typeof window.ethereum != "undefined") {
+      try {
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+        if (accounts.length > 0) {
+          setWalletAddress(accounts[0]);
+          console.log(accounts[0]);
+        } else {
+          console.log("Connect to MetaMask using the Connect button");
+        }
+      } catch (err) {
+        console.error(err.message);
+      }
+    } else {
+      /* MetaMask is not installed */
+      console.log("Please install MetaMask");
+    }
+  };
+
+  const addWalletListener = async () => {
+    if (typeof window != "undefined" && typeof window.ethereum != "undefined") {
+      window.ethereum.on("accountsChanged", (accounts) => {
+        setWalletAddress(accounts[0]);
+        console.log(accounts[0]);
+      });
+    } else {
+      /* MetaMask is not installed */
+      setWalletAddress("");
+      console.log("Please install MetaMask");
+    }
+  };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -74,9 +133,12 @@ export default function PersistentDrawerLeft() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6"  noWrap component="div">
             Blockchain Certificate
           </Typography>
+          
+          <button onClick={connectWallet} style={{marginLeft: "50rem"}}>Connect Wallet</button>
+         
         </Toolbar>
       </AppBar>
       <Drawer
